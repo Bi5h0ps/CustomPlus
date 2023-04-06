@@ -5,4 +5,7 @@
     <string name="statistics">Statistics</string>
     <string name="statistics_fragment">Statistics Fragment</string>
     <string name="transportation_fragment">Transportation Fragment</string>
+    <string name="transportation_bus_fragment">transportation/bus fragment</string>
+    <string name="transportation_railway_fragment">transportation/railway fragment</string>
+    <string name="transportation_subway_fragment">transportation/subway fragment</string>
 </resources>

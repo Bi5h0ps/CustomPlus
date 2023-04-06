@@ -6,6 +6,8 @@ android {
     namespace 'com.comp7506.customplus'
     compileSdk 33
 
+    dataBinding.enabled true
+
     defaultConfig {
         applicationId "com.comp7506.customplus"
         minSdk 16
