@@ -8,4 +8,6 @@
     <string name="transportation_bus_fragment">transportation/bus fragment</string>
     <string name="transportation_railway_fragment">transportation/railway fragment</string>
     <string name="transportation_subway_fragment">transportation/subway fragment</string>
+    <string name="request_failed">Request Failed</string>
+    <string name="retry">Retry</string>
 </resources>

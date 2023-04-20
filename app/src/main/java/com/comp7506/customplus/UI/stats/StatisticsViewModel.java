@@ -17,9 +17,16 @@ public class StatisticsViewModel extends ViewModel {
         return data;
     }
 
+    private MutableLiveData<Boolean> requestFailed;
+
+    public LiveData<Boolean> getFailStatus() {
+        return requestFailed;
+    }
+
     APIInterface apiInterface;
     public void init() {
         data = new MutableLiveData<>();
+        requestFailed = new MutableLiveData<>();
         apiInterface = APIClient.getClient().create(APIInterface.class);
     }
 
@@ -34,6 +41,7 @@ public class StatisticsViewModel extends ViewModel {
 
             @Override
             public void onFailure(Call<ArrivalInfo> call, Throwable t) {
+                requestFailed.postValue(true);
                 t.printStackTrace();
             }
         });
