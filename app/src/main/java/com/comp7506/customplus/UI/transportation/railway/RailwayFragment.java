@@ -127,8 +127,8 @@ public class RailwayFragment extends Fragment {
             s.data.size();
         }
         hideNoData();
-        mFromStation.setText(s.data.get(0).queryLeftNewDTO.fromStation);
-        mToStation.setText(s.data.get(0).queryLeftNewDTO.toStation);
+        mFromStation.setText(codeToName(s.data.get(0).queryLeftNewDTO.fromStation));
+        mToStation.setText(codeToName(s.data.get(0).queryLeftNewDTO.toStation));
         mStartTime.setText(s.data.get(0).queryLeftNewDTO.startTime);
         mArriveTime.setText(s.data.get(0).queryLeftNewDTO.arriveTime);
         mTrainCode.setText(s.data.get(0).queryLeftNewDTO.trainCode);
@@ -165,5 +165,26 @@ public class RailwayFragment extends Fragment {
         mPdialog.setMessage("Loading Data...");
         mPdialog.show();
         mRailwayViewModel.retrieveRailwaySchedule(toStationName);
+    }
+
+    public static String codeToName(String code) {
+        switch (code) {
+            case "XJA":
+                return "West Kowloon";
+            case "NZQ":
+                return "Futian";
+            case "IOQ":
+                return "Shenzhen North";
+            case "DNA":
+                return "Dongguan South";
+            case "RTQ":
+                return "Dongguan";
+            case "GGQ":
+                return "Guangzhou East";
+            case "IZQ":
+                return "Guangzhou South";
+            default:
+                return "Unknown";
+        }
     }
 }

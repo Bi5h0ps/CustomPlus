@@ -5,13 +5,8 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.comp7506.customplus.UI.datamodel.RailwaySchedule;
-import com.comp7506.customplus.UI.datamodel.SubwaySchedule;
 import com.comp7506.customplus.UI.network.APIClient;
 import com.comp7506.customplus.UI.network.APIInterface;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
