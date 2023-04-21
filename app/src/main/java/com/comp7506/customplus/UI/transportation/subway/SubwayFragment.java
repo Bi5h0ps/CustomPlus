@@ -10,10 +10,10 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.comp7506.customplus.R;
 import com.comp7506.customplus.UI.datamodel.SubwaySchedule;
-import com.comp7506.customplus.UI.transportation.railway.SubwayViewModel;
 
 import java.util.ArrayList;
 
@@ -83,17 +83,7 @@ public class SubwayFragment extends Fragment {
         mSubwayViewModel = new ViewModelProvider(this).get(SubwayViewModel.class);
         mSubwayViewModel.init();
         mPdialog = new ProgressDialog(requireContext());
-        ArrayList<String> items = new ArrayList<>();
-        items.add("Airport");
-        items.add("West Kowloon");
-        items.add("Man Kam To");
-        items.add("Heung Yuen Wai");
-        items.add("Shenzhen Bay");
-        items.add("Lo Wu");
-        items.add("Lok Ma Chau");
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(),
-                android.R.layout.simple_spinner_item, items);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        ArrayAdapter<String> adapter = getArrayAdapterSubway();
         mSpinner.setAdapter(adapter);
         mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -109,39 +99,56 @@ public class SubwayFragment extends Fragment {
         });
 
         mSubwayViewModel.getSchedule().observe(getViewLifecycleOwner(), subwaySchedule -> {
-            renderCard(1, subwaySchedule);
-            if (subwaySchedule.data.scheduleList.size() > 1) {
-                renderCard(2, subwaySchedule);
-            } else {
-                //hide card
-                mCardView.setVisibility(View.GONE);
-            }
+            renderCard(subwaySchedule);
+            mPdialog.hide();
+        });
+
+        mSubwayViewModel.getFailStatus().observe(getViewLifecycleOwner(), failed -> {
+            Toast.makeText(requireContext(), "Request Timeout", Toast.LENGTH_SHORT).show();
             mPdialog.hide();
         });
 
         mButton.setOnClickListener(view1 -> {
-            //TODO
+            String controlPoint = mSpinner.getSelectedItem().toString(); // Get the selected item as a String
+            getData(controlPoint);
         });
 
         return view;
     }
 
-    private void renderCard(int cardNum, SubwaySchedule s) {
-        if (s.data.scheduleList.get(0).departureTimes == null) {
+    private void renderCard(SubwaySchedule s) {
+        if (s.data.scheduleList == null || s.data.scheduleList.get(0).departureTimes == null ||
+                s.data.scheduleList.get(0).departureTimes.size() == 0) {
            showNoData();
            return;
-        } else {
-            hideNoData();
         }
-        if (cardNum == 1) {
-            mTextDirectionStart1.setText(s.data.scheduleList.get(0).start);
-            mTextDirectionDestination1.setText(s.data.scheduleList.get(0).destination);
-            mTextDirectionTime1.setText(s.data.scheduleList.get(0).departureTimes.get(0));
-        } else if (cardNum == 2) {
+        hideNoData();
+        mTextDirectionStart1.setText(s.data.scheduleList.get(0).start);
+        mTextDirectionDestination1.setText(s.data.scheduleList.get(0).destination);
+        mTextDirectionTime1.setText(s.data.scheduleList.get(0).departureTimes.get(0));
+        mCardView.setVisibility(View.GONE);
+
+        if (s.data.scheduleList.size() > 1) {
+            mCardView.setVisibility(View.VISIBLE);
             mTextDirectionStart2.setText(s.data.scheduleList.get(1).start);
             mTextDirectionDestination2.setText(s.data.scheduleList.get(1).destination);
             mTextDirectionTime2.setText(s.data.scheduleList.get(1).departureTimes.get(0));
         }
+    }
+
+    private ArrayAdapter<String> getArrayAdapterSubway() {
+        ArrayList<String> items = new ArrayList<>();
+        items.add("Airport");
+        items.add("West Kowloon");
+        items.add("Man Kam To");
+        items.add("Heung Yuen Wai");
+        items.add("Shenzhen Bay");
+        items.add("Lo Wu");
+        items.add("Lok Ma Chau");
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(),
+                android.R.layout.simple_spinner_item, items);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        return adapter;
     }
 
     private void showNoData() {

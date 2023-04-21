@@ -1,4 +1,4 @@
-package com.comp7506.customplus.UI.transportation.railway;
+package com.comp7506.customplus.UI.transportation.subway;
 
 import com.comp7506.customplus.UI.datamodel.SubwaySchedule;
 import com.comp7506.customplus.UI.network.APIClient;
@@ -19,15 +19,40 @@ public class SubwayViewModel extends ViewModel {
         return subwayScheduleMutableLiveData;
     }
 
+    private MutableLiveData<Boolean> requestFailed;
+
+    public LiveData<Boolean> getFailStatus() {
+        return requestFailed;
+    }
+
     public void init() {
         subwayScheduleMutableLiveData = new MutableLiveData<>();
+        requestFailed = new MutableLiveData<>();
         apiInterface = APIClient.getClient().create(APIInterface.class);
     }
 
     public void retrieveSubwaySchedule(String controlPoint) {
+        String line = nameToCode(controlPoint)[0];
+        String station = nameToCode(controlPoint)[1];
+        Call<SubwaySchedule> call = apiInterface.doGetSubwaySchedule(line, station);
+        call.enqueue(new Callback<SubwaySchedule>() {
+            @Override
+            public void onResponse(Call<SubwaySchedule> call, Response<SubwaySchedule> response) {
+                SubwaySchedule subwaySchedule = response.body();
+                subwayScheduleMutableLiveData.postValue(subwaySchedule);
+            }
+
+            @Override
+            public void onFailure(Call<SubwaySchedule> call, Throwable t) {
+                requestFailed.postValue(true);
+                t.printStackTrace();
+            }
+        });
+    }
+
+    private String[] nameToCode(String controlPoint) {
         String line = "";
         String station = "";
-
         switch (controlPoint) {
             case "Airport":
                 line = "AEL";
@@ -38,9 +63,6 @@ public class SubwayViewModel extends ViewModel {
                 station = "KOW";
                 break;
             case "Man Kam To":
-                line = "EAL";
-                station = "SHS";
-                break;
             case "Heung Yuen Wai":
                 line = "EAL";
                 station = "SHS";
@@ -58,18 +80,6 @@ public class SubwayViewModel extends ViewModel {
                 station = "LMC";
                 break;
         }
-        Call<SubwaySchedule> call = apiInterface.doGetSubwaySchedule(line, station);
-        call.enqueue(new Callback<SubwaySchedule>() {
-            @Override
-            public void onResponse(Call<SubwaySchedule> call, Response<SubwaySchedule> response) {
-                SubwaySchedule subwaySchedule = response.body();
-                subwayScheduleMutableLiveData.postValue(subwaySchedule);
-            }
-
-            @Override
-            public void onFailure(Call<SubwaySchedule> call, Throwable t) {
-                t.printStackTrace();
-            }
-        });
+        return new String[]{line, station};
     }
 }
