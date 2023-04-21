@@ -15,4 +15,7 @@
     <string name="hong_kong">Hong Kong</string>
     <string name="to">To</string>
     <string name="next_train">Next train:</string>
+
+    <string name="shenzhen_north">Shenzhen North</string>
+    <string name="west_kowloon">West Kowloon</string>
 </resources>

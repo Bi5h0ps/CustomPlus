@@ -27,4 +27,21 @@ public class APIClient {
 
         return retrofit;
     }
+
+    public static Retrofit getRailwayClient(){
+        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+        OkHttpClient
+                client = new OkHttpClient.Builder()
+                .addInterceptor(interceptor)
+                .build();
+
+        retrofit = new Retrofit.Builder()
+                .baseUrl("https://kyfw.12306.cn")
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(client)
+                .build();
+
+        return retrofit;
+    }
 }
