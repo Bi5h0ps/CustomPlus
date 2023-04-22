@@ -24,6 +24,7 @@ import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -56,8 +57,8 @@ public class SubwayFragment extends Fragment {
     @BindView(R.id.spinner_subway)
     Spinner mSpinner;
 
-    @BindView(R.id.refresh_button)
-    Button mButton;
+    @BindView(R.id.swipeRefreshLayout)
+    SwipeRefreshLayout mSwiper;
 
     @BindView(R.id.direction_2)
     CardView mCardView;
@@ -102,16 +103,21 @@ public class SubwayFragment extends Fragment {
         mSubwayViewModel.getSchedule().observe(getViewLifecycleOwner(), subwaySchedule -> {
             renderCard(subwaySchedule);
             mPdialog.hide();
+            mSwiper.setRefreshing(false);
         });
 
         mSubwayViewModel.getFailStatus().observe(getViewLifecycleOwner(), failed -> {
             Toast.makeText(requireContext(), "Request Timeout", Toast.LENGTH_SHORT).show();
             mPdialog.hide();
+            mSwiper.setRefreshing(false);
         });
 
-        mButton.setOnClickListener(view1 -> {
-            String controlPoint = mSpinner.getSelectedItem().toString(); // Get the selected item as a String
-            getData(controlPoint);
+        mSwiper.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                String controlPoint = mSpinner.getSelectedItem().toString(); // Get the selected item as a String
+                getData(controlPoint);
+            }
         });
 
         return view;

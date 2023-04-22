@@ -21,6 +21,7 @@ import java.util.Objects;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -38,6 +39,9 @@ public class BusFragment extends Fragment {
 
     @BindView(R.id.button_retry)
     Button mRetryButton;
+
+    @BindView(R.id.error_bock_bus)
+    ConstraintLayout mErrorBlock;
     private TextAdapter textAdapter;
 
     BusViewModel mBusViewModel;
@@ -60,19 +64,22 @@ public class BusFragment extends Fragment {
         mPdialog = new CustomProgressDialog(requireContext());
 
         mBusViewModel.getBusSchedule().observe(requireActivity(), busShedule -> {
-            mRetryButton.setVisibility(View.GONE);
+            mErrorBlock.setVisibility(View.GONE);
             if (busShedule != null && busShedule.routes != null) {
                 ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(),
                         android.R.layout.simple_spinner_item, busShedule.routes);
                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 mSpinner.setAdapter(adapter);
+            } else {
+                Toast.makeText(requireContext(), "Time out", Toast.LENGTH_SHORT).show();
+                mErrorBlock.setVisibility(View.VISIBLE);
             }
             mPdialog.hide();
         });
 
         mBusViewModel.getFailStatus().observe(getViewLifecycleOwner(), requestFailed -> {
             Toast.makeText(requireContext(), "Time out", Toast.LENGTH_SHORT).show();
-            mRetryButton.setVisibility(View.VISIBLE);
+            mErrorBlock.setVisibility(View.VISIBLE);
             mPdialog.hide();
         });
 
