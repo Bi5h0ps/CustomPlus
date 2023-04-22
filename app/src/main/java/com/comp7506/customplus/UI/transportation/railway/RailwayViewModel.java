@@ -11,6 +11,7 @@ import com.comp7506.customplus.UI.network.APIInterface;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.TimeZone;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -39,8 +40,11 @@ public class RailwayViewModel extends ViewModel {
         apiInterface = APIClient.getRailwayClient().create(APIInterface.class);
     }
 
-    public void retrieveRailwaySchedule(String toStationName)  {
-        String date = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+    public void retrieveRailwaySchedule(String toStationName) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        simpleDateFormat.setTimeZone(TimeZone.getTimeZone("Asia/Shanghai"));// 设置为东八区
+        String date = simpleDateFormat.format(new Date());
+
         String fromStationCode = nameToCode("West Kowloon");
         String toStationCode = nameToCode(toStationName);
 

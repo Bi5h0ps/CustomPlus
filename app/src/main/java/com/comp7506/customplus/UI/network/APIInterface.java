@@ -18,7 +18,6 @@ public interface APIInterface {
 
     @GET("/data/shuttle_bus")
     Call<ShuttleBusTimetable>doGetBusSchedule();
-    Call<SubwaySchedule> doGetSubwaySchedule(@Query("line") String line, @Query("sta") String sta);
 
     @GET("/otn/leftTicketPrice/queryAllPublicPrice")
     Call<RailwaySchedule> doGetRailwaySchedule(@Query("leftTicketDTO.train_date") String date, @Query("leftTicketDTO.from_station") String fromStationCode, @Query("leftTicketDTO.to_station") String toStationCode, @Query("purpose_codes") String ticketType);
