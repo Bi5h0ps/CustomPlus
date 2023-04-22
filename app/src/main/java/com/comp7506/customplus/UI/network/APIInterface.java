@@ -1,6 +1,7 @@
 package com.comp7506.customplus.UI.network;
 
 import com.comp7506.customplus.UI.datamodel.ArrivalInfo;
+import com.comp7506.customplus.UI.datamodel.ShuttleBusTimetable;
 import com.comp7506.customplus.UI.datamodel.RailwaySchedule;
 import com.comp7506.customplus.UI.datamodel.SubwaySchedule;
 
@@ -13,6 +14,10 @@ public interface APIInterface {
     Call<ArrivalInfo> doGetArrialData();
 
     @GET("/data/subway")
+    Call<SubwaySchedule>doGetSubwaySchedule(@Query("line") String line, @Query("sta") String sta);
+
+    @GET("/data/shuttle_bus")
+    Call<ShuttleBusTimetable>doGetBusSchedule();
     Call<SubwaySchedule> doGetSubwaySchedule(@Query("line") String line, @Query("sta") String sta);
 
     @GET("/otn/leftTicketPrice/queryAllPublicPrice")

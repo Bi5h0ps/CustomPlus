@@ -1,6 +1,5 @@
 package com.comp7506.customplus.UI.stats;
 
-import android.app.ProgressDialog;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,11 +9,11 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.RadioGroup;
 import android.widget.Spinner;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import com.comp7506.customplus.R;
+import com.comp7506.customplus.UI.custom.CustomProgressDialog;
 import com.comp7506.customplus.UI.datamodel.ArrivalInfo;
 import com.comp7506.customplus.UI.tools.tools;
 import com.github.mikephil.charting.charts.LineChart;
@@ -25,14 +24,11 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
 import java.util.Objects;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import butterknife.BindView;
@@ -43,7 +39,7 @@ import static com.comp7506.customplus.UI.tools.tools.getTimeInMillis;
 public class StatisticsFragment extends Fragment {
 
     StatisticsViewModel mViewModel;
-    ProgressDialog mPdialog;
+    CustomProgressDialog mPdialog;
     public StatisticsFragment() {
         // Required empty public constructor
     }
@@ -54,8 +50,8 @@ public class StatisticsFragment extends Fragment {
     @BindView(R.id.line_chart)
     LineChart mLineChart;
 
-    @BindView(R.id.retry_block)
-    LinearLayout mRetryBlock;
+    @BindView(R.id.error_bock)
+    ConstraintLayout mRetryBlock;
 
     @BindView(R.id.retry_button)
     Button mRetryButton;
@@ -68,16 +64,21 @@ public class StatisticsFragment extends Fragment {
         ButterKnife.bind(this, view);
         mViewModel = new ViewModelProvider(this).get(StatisticsViewModel.class);
         mViewModel.init();
-        mPdialog = new ProgressDialog(requireContext());
+        mPdialog = new CustomProgressDialog(requireContext());
 
         mViewModel.getData().observe(getViewLifecycleOwner(), arrivalInfo -> {
-            ArrayList<String> items = arrivalInfo.controlPointNames;
-            ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(),
-                    android.R.layout.simple_spinner_item, items);
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            mSpinner.setAdapter(adapter);
-            hideRetryBlock();
-            mPdialog.hide();
+            if (arrivalInfo != null) {
+                ArrayList<String> items = arrivalInfo.controlPointNames;
+                ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(),
+                        android.R.layout.simple_spinner_item, items);
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                mSpinner.setAdapter(adapter);
+                hideRetryBlock();
+                mPdialog.hide();
+            } else {
+                showRetryBlock();
+                mPdialog.hide();
+            }
         });
 
         mViewModel.getFailStatus().observe(getViewLifecycleOwner(), requestFailed -> {

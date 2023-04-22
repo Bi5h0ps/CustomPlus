@@ -17,7 +17,7 @@ import butterknife.ButterKnife;
 public class TransportationFragment extends Fragment {
 
     private static final String TAB_1_NAME = "Subway";
-    private static final String TAB_2_NAME = "City Bus";
+    private static final String TAB_2_NAME = "Shuttle Bus";
     private static final String TAB_3_NAME = "High-speed Railway";
 
     @BindView(R.id.tab_layout)

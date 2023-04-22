@@ -13,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.comp7506.customplus.R;
+import com.comp7506.customplus.UI.custom.CustomProgressDialog;
 import com.comp7506.customplus.UI.datamodel.SubwaySchedule;
 
 import java.util.ArrayList;
@@ -23,6 +24,7 @@ import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -55,8 +57,8 @@ public class SubwayFragment extends Fragment {
     @BindView(R.id.spinner_subway)
     Spinner mSpinner;
 
-    @BindView(R.id.refresh_button)
-    Button mButton;
+    @BindView(R.id.swipeRefreshLayout)
+    SwipeRefreshLayout mSwiper;
 
     @BindView(R.id.direction_2)
     CardView mCardView;
@@ -68,7 +70,7 @@ public class SubwayFragment extends Fragment {
     ConstraintLayout mNoDataBlock;
 
     SubwayViewModel mSubwayViewModel;
-    ProgressDialog mPdialog;
+    CustomProgressDialog mPdialog;
 
     public SubwayFragment() {
         // Required empty public constructor
@@ -82,7 +84,7 @@ public class SubwayFragment extends Fragment {
         ButterKnife.bind(this, view);
         mSubwayViewModel = new ViewModelProvider(this).get(SubwayViewModel.class);
         mSubwayViewModel.init();
-        mPdialog = new ProgressDialog(requireContext());
+        mPdialog = new CustomProgressDialog(requireContext());
         ArrayAdapter<String> adapter = getArrayAdapterSubway();
         mSpinner.setAdapter(adapter);
         mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -101,16 +103,21 @@ public class SubwayFragment extends Fragment {
         mSubwayViewModel.getSchedule().observe(getViewLifecycleOwner(), subwaySchedule -> {
             renderCard(subwaySchedule);
             mPdialog.hide();
+            mSwiper.setRefreshing(false);
         });
 
         mSubwayViewModel.getFailStatus().observe(getViewLifecycleOwner(), failed -> {
             Toast.makeText(requireContext(), "Request Timeout", Toast.LENGTH_SHORT).show();
             mPdialog.hide();
+            mSwiper.setRefreshing(false);
         });
 
-        mButton.setOnClickListener(view1 -> {
-            String controlPoint = mSpinner.getSelectedItem().toString(); // Get the selected item as a String
-            getData(controlPoint);
+        mSwiper.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                String controlPoint = mSpinner.getSelectedItem().toString(); // Get the selected item as a String
+                getData(controlPoint);
+            }
         });
 
         return view;
