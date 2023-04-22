@@ -13,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.comp7506.customplus.R;
+import com.comp7506.customplus.UI.custom.CustomProgressDialog;
 import com.comp7506.customplus.UI.datamodel.SubwaySchedule;
 
 import java.util.ArrayList;
@@ -68,7 +69,7 @@ public class SubwayFragment extends Fragment {
     ConstraintLayout mNoDataBlock;
 
     SubwayViewModel mSubwayViewModel;
-    ProgressDialog mPdialog;
+    CustomProgressDialog mPdialog;
 
     public SubwayFragment() {
         // Required empty public constructor
@@ -82,7 +83,7 @@ public class SubwayFragment extends Fragment {
         ButterKnife.bind(this, view);
         mSubwayViewModel = new ViewModelProvider(this).get(SubwayViewModel.class);
         mSubwayViewModel.init();
-        mPdialog = new ProgressDialog(requireContext());
+        mPdialog = new CustomProgressDialog(requireContext());
         ArrayAdapter<String> adapter = getArrayAdapterSubway();
         mSpinner.setAdapter(adapter);
         mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {

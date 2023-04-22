@@ -15,6 +15,7 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.comp7506.customplus.R;
+import com.comp7506.customplus.UI.custom.CustomProgressDialog;
 import com.comp7506.customplus.UI.datamodel.ArrivalInfo;
 import com.comp7506.customplus.UI.tools.tools;
 import com.github.mikephil.charting.charts.LineChart;
@@ -43,7 +44,7 @@ import static com.comp7506.customplus.UI.tools.tools.getTimeInMillis;
 public class StatisticsFragment extends Fragment {
 
     StatisticsViewModel mViewModel;
-    ProgressDialog mPdialog;
+    CustomProgressDialog mPdialog;
     public StatisticsFragment() {
         // Required empty public constructor
     }
@@ -68,7 +69,7 @@ public class StatisticsFragment extends Fragment {
         ButterKnife.bind(this, view);
         mViewModel = new ViewModelProvider(this).get(StatisticsViewModel.class);
         mViewModel.init();
-        mPdialog = new ProgressDialog(requireContext());
+        mPdialog = new CustomProgressDialog(requireContext());
 
         mViewModel.getData().observe(getViewLifecycleOwner(), arrivalInfo -> {
             ArrayList<String> items = arrivalInfo.controlPointNames;

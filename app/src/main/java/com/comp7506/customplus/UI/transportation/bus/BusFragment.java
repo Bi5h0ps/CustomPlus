@@ -12,6 +12,7 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.comp7506.customplus.R;
+import com.comp7506.customplus.UI.custom.CustomProgressDialog;
 import com.comp7506.customplus.UI.transportation.subway.SubwayViewModel;
 
 import java.util.ArrayList;
@@ -40,7 +41,7 @@ public class BusFragment extends Fragment {
     private TextAdapter textAdapter;
 
     BusViewModel mBusViewModel;
-    ProgressDialog mPdialog;
+    CustomProgressDialog mPdialog;
 
     public BusFragment() {
         // Required empty public constructor
@@ -56,7 +57,7 @@ public class BusFragment extends Fragment {
 
         mBusViewModel = new ViewModelProvider(this).get(BusViewModel.class);
         mBusViewModel.init();
-        mPdialog = new ProgressDialog(requireContext());
+        mPdialog = new CustomProgressDialog(requireContext());
 
         mBusViewModel.getBusSchedule().observe(requireActivity(), busShedule -> {
             mRetryButton.setVisibility(View.GONE);
