@@ -28,7 +28,6 @@ import org.json.JSONException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.TimeZone;
 
 
@@ -175,9 +174,6 @@ public class RailwayFragment extends Fragment {
     }
 
     private void getData(String fromStationName) throws JSONException {
-        mPdialog.setCancelable(false);
-        mPdialog.setMessage("Loading Data...");
-        mPdialog.show();
         mRailwayViewModel.retrieveRailwaySchedule(fromStationName);
     }
 
