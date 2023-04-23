@@ -4,16 +4,17 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
 
-public class SubwaySchedule{
+public class SubwaySchedule {
     @SerializedName("data")
     public Schedule data;
-    public class Schedule{
+
+    public class Schedule {
         @SerializedName("scheduleList")
         public ArrayList<ScheduleList> scheduleList;
         @SerializedName("onTime")
         public boolean onTime;
 
-        public class ScheduleList{
+        public class ScheduleList {
             @SerializedName("start")
             public String start;
             @SerializedName("destination")

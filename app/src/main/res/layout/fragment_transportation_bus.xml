@@ -36,7 +36,6 @@
             android:id="@+id/animation_view"
             android:layout_width="200dp"
             android:layout_height="200dp"
-            app:lottie_rawRes="@raw/errorfailure"
             app:lottie_autoPlay="true"
             app:lottie_loop="false"
             app:layout_constraintBottom_toBottomOf="parent"

@@ -26,6 +26,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -42,8 +43,8 @@ public class BusFragment extends Fragment {
 
     @BindView(R.id.error_bock_bus)
     ConstraintLayout mErrorBlock;
-    private TextAdapter textAdapter;
 
+    private TextAdapter textAdapter;
     BusViewModel mBusViewModel;
     CustomProgressDialog mPdialog;
 
@@ -58,7 +59,6 @@ public class BusFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_transportation_bus, container, false);
         ButterKnife.bind(this, view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-
         mBusViewModel = new ViewModelProvider(this).get(BusViewModel.class);
         mBusViewModel.init();
         mPdialog = new CustomProgressDialog(requireContext());
@@ -71,14 +71,14 @@ public class BusFragment extends Fragment {
                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 mSpinner.setAdapter(adapter);
             } else {
-                Toast.makeText(requireContext(), "Time out", Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), "Request out", Toast.LENGTH_SHORT).show();
                 mErrorBlock.setVisibility(View.VISIBLE);
             }
             mPdialog.hide();
         });
 
         mBusViewModel.getFailStatus().observe(getViewLifecycleOwner(), requestFailed -> {
-            Toast.makeText(requireContext(), "Time out", Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), "Request out", Toast.LENGTH_SHORT).show();
             mErrorBlock.setVisibility(View.VISIBLE);
             mPdialog.hide();
         });
