@@ -70,7 +70,6 @@ public class SubwayFragment extends Fragment {
     ConstraintLayout mNoDataBlock;
 
     SubwayViewModel mSubwayViewModel;
-    CustomProgressDialog mPdialog;
 
     public SubwayFragment() {
         // Required empty public constructor
@@ -84,7 +83,6 @@ public class SubwayFragment extends Fragment {
         ButterKnife.bind(this, view);
         mSubwayViewModel = new ViewModelProvider(this).get(SubwayViewModel.class);
         mSubwayViewModel.init();
-        mPdialog = new CustomProgressDialog(requireContext());
         ArrayAdapter<String> adapter = getArrayAdapterSubway();
         mSpinner.setAdapter(adapter);
         mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -102,13 +100,11 @@ public class SubwayFragment extends Fragment {
 
         mSubwayViewModel.getSchedule().observe(getViewLifecycleOwner(), subwaySchedule -> {
             renderCard(subwaySchedule);
-            mPdialog.hide();
             mSwiper.setRefreshing(false);
         });
 
         mSubwayViewModel.getFailStatus().observe(getViewLifecycleOwner(), failed -> {
             Toast.makeText(requireContext(), "Request Timeout", Toast.LENGTH_SHORT).show();
-            mPdialog.hide();
             mSwiper.setRefreshing(false);
         });
 
@@ -171,9 +167,7 @@ public class SubwayFragment extends Fragment {
     }
 
     private void getData(String controlPoint) {
-        mPdialog.setCancelable(false);
-        mPdialog.setMessage("Loading Data...");
-        mPdialog.show();
+        mSwiper.setRefreshing(true);
         mSubwayViewModel.retrieveSubwaySchedule(controlPoint);
     }
 }

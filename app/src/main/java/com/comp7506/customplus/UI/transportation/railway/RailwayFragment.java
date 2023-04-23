@@ -1,6 +1,5 @@
 package com.comp7506.customplus.UI.transportation.railway;
 
-import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,7 +8,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.comp7506.customplus.R;
@@ -33,6 +31,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -53,11 +52,8 @@ public class RailwayFragment extends Fragment {
     @BindView(R.id.button_retry_railway)
     Button mRetryButton;
 
-
-
     private RailwayAdapter railwayAdapter;
     RailwayViewModel mRailwayViewModel;
-    ProgressDialog mPdialog;
 
     public RailwayFragment() {
         // Required empty public constructor
@@ -71,7 +67,6 @@ public class RailwayFragment extends Fragment {
         ButterKnife.bind(this, view);
         mRailwayViewModel = new ViewModelProvider(this).get(RailwayViewModel.class);
         mRailwayViewModel.init();
-        mPdialog = new ProgressDialog(requireContext());
         ArrayAdapter<String> adapter = getArrayAdapterRailway();
         mSpinner.setAdapter(adapter);
         mRailwayTimeList.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -95,6 +90,7 @@ public class RailwayFragment extends Fragment {
 
         mRailwayViewModel.getSchedule().observe(getViewLifecycleOwner(), railwaySchedule -> {
             mErrorBlock.setVisibility(View.GONE);
+            mSwiper.setRefreshing(false);
             if (railwaySchedule.data != null) {
                 // Current time
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm");
@@ -129,44 +125,27 @@ public class RailwayFragment extends Fragment {
                 // Toast.makeText(requireContext(), "Time out", Toast.LENGTH_SHORT).show();
                 mErrorBlock.setVisibility(View.VISIBLE);
             }
-            mPdialog.hide();
+            mSwiper.setRefreshing(false);
         });
 
         mRailwayViewModel.getFailStatus().observe(getViewLifecycleOwner(), failed -> {
             Toast.makeText(requireContext(), "Request Timeout", Toast.LENGTH_SHORT).show();
             mErrorBlock.setVisibility(View.VISIBLE);
-            mPdialog.hide();
             mSwiper.setRefreshing(false);
         });
 
-        // mSwiper.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-        //     @Override
-        //     public void onRefresh() {
-        //         String toStation = mSpinner.getSelectedItem().toString(); // Get the selected item as a String
-        //         try {
-        //             getData(toStation);
-        //         } catch (JSONException e) {
-        //             throw new RuntimeException(e);
-        //         }
-        //     }
-        // });
+         mSwiper.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+             @Override
+             public void onRefresh() {
+                 String toStation = mSpinner.getSelectedItem().toString(); // Get the selected item as a String
+                 try {
+                     getData(toStation);
+                 } catch (JSONException e) {
+                     throw new RuntimeException(e);
+                 }
+             }
+         });
 
-        // mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-        //     @Override
-        //     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-        //         String selectedItem = adapterView.getItemAtPosition(i).toString();
-        //         try {
-        //             getData(selectedItem);
-        //         } catch (JSONException e) {
-        //             throw new RuntimeException(e);
-        //         }
-        //     }
-        //
-        //     @Override
-        //     public void onNothingSelected(AdapterView<?> adapterView) {
-        //
-        //     }
-        // });
         mRetryButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

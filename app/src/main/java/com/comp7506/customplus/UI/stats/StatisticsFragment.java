@@ -1,5 +1,6 @@
 package com.comp7506.customplus.UI.stats;
 
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -8,9 +9,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.Spinner;
-import android.widget.TextView;
 
 import com.comp7506.customplus.R;
 import com.comp7506.customplus.UI.custom.CustomProgressDialog;
@@ -29,6 +28,7 @@ import java.util.Objects;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import butterknife.BindView;
@@ -125,15 +125,19 @@ public class StatisticsFragment extends Fragment {
             values.add(new Entry(getTimeInMillis(arrivalInfo.dates.get(index)), i.intValue()));
             index++;
         }
+        // Get the current configuration
+        Configuration config = getResources().getConfiguration();
+        boolean isDarkMode = (config.uiMode & Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES;
+        int color = isDarkMode ? Color.WHITE: Color.BLACK;
         LineDataSet lineDataSet = new LineDataSet(values, "Arrival Count, Past 30 Days");
-        mLineChart.getLegend().setTextColor(Color.WHITE);
+        mLineChart.getLegend().setTextColor(color);
         mLineChart.setDragEnabled(true);
         mLineChart.setScaleEnabled(false);
-        mLineChart.getDescription().setTextColor(Color.WHITE);
-        mLineChart.getXAxis().setTextColor(Color.WHITE);
-        mLineChart.getAxis(YAxis.AxisDependency.LEFT).setTextColor(Color.WHITE);
-        mLineChart.getAxis(YAxis.AxisDependency.RIGHT).setTextColor(Color.WHITE);
-        lineDataSet.setValueTextColor(Color.WHITE); // set value label color to white
+        mLineChart.getDescription().setTextColor(color);
+        mLineChart.getXAxis().setTextColor(color);
+        mLineChart.getAxis(YAxis.AxisDependency.LEFT).setTextColor(color);
+        mLineChart.getAxis(YAxis.AxisDependency.RIGHT).setTextColor(color);
+        lineDataSet.setValueTextColor(color);
         lineDataSet.setValueTextSize(5f);
         lineDataSet.setFillAlpha(110);
         ArrayList<ILineDataSet> dataSets = new ArrayList<>();
