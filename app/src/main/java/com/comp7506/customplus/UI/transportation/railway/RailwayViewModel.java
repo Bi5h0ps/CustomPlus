@@ -40,13 +40,13 @@ public class RailwayViewModel extends ViewModel {
         apiInterface = APIClient.getRailwayClient().create(APIInterface.class);
     }
 
-    public void retrieveRailwaySchedule(String toStationName) {
+    public void retrieveRailwaySchedule(String fromStationName) {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
         simpleDateFormat.setTimeZone(TimeZone.getTimeZone("Asia/Shanghai"));// 设置为东八区
         String date = simpleDateFormat.format(new Date());
 
-        String fromStationCode = nameToCode("West Kowloon");
-        String toStationCode = nameToCode(toStationName);
+        String fromStationCode = nameToCode(fromStationName);
+        String toStationCode = nameToCode("West Kowloon");
 
         Call<RailwaySchedule> call = apiInterface.doGetRailwaySchedule(date, fromStationCode, toStationCode, "ADULT");
         call.enqueue(new Callback<RailwaySchedule>() {

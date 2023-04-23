@@ -27,8 +27,11 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import org.json.JSONException;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -93,11 +96,21 @@ public class RailwayFragment extends Fragment {
         mRailwayViewModel.getSchedule().observe(getViewLifecycleOwner(), railwaySchedule -> {
             mErrorBlock.setVisibility(View.GONE);
             if (railwaySchedule.data != null) {
+                // Current time
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm");
+                simpleDateFormat.setTimeZone(TimeZone.getTimeZone("Asia/Shanghai"));// 设置为东八区
+                String curTime = simpleDateFormat.format(new Date());
+
                 ArrayList<RailwayData> railwayData = new ArrayList<>();
                 for (RailwaySchedule.RailwayInfo info : railwaySchedule.data) {
-                    String toStation = codeToName(info.queryLeftNewDTO.toStation);
-                    String selectToStation = mSpinner.getSelectedItem().toString();
-                    if (!toStation.equals(selectToStation)) {
+                    String fromStation = codeToName(info.queryLeftNewDTO.fromStation);
+                    String selectFromStation = mSpinner.getSelectedItem().toString();
+                    // Filter the data on the selected station
+                    if (!fromStation.equals(selectFromStation)) {
+                        continue;
+                    }
+                    // Filter the data on the current time
+                    if(info.queryLeftNewDTO.startTime.compareTo(curTime) < 0) {
                         continue;
                     }
                     railwayData.add(new RailwayData(
@@ -174,7 +187,7 @@ public class RailwayFragment extends Fragment {
         ArrayList<String> items = new ArrayList<>();
         items.add("Futian");
         items.add("Shenzhen North");
-        items.add("Guangzhou East");
+        // items.add("Guangzhou East");
         items.add("Guangzhou South");
         ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(),
                 android.R.layout.simple_spinner_item, items);
@@ -182,11 +195,11 @@ public class RailwayFragment extends Fragment {
         return adapter;
     }
 
-    private void getData(String toStationName) throws JSONException {
+    private void getData(String fromStationName) throws JSONException {
         mPdialog.setCancelable(false);
         mPdialog.setMessage("Loading Data...");
         mPdialog.show();
-        mRailwayViewModel.retrieveRailwaySchedule(toStationName);
+        mRailwayViewModel.retrieveRailwaySchedule(fromStationName);
     }
 
     public static String codeToName(String code) {
