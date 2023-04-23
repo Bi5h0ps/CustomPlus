@@ -11,7 +11,6 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.comp7506.customplus.R;
-import com.comp7506.customplus.UI.custom.CustomProgressDialog;
 import com.comp7506.customplus.UI.datamodel.RailwayData;
 import com.comp7506.customplus.UI.datamodel.RailwaySchedule;
 
@@ -50,7 +49,6 @@ public class RailwayFragment extends Fragment {
 
     private RailwayAdapter railwayAdapter;
     RailwayViewModel mRailwayViewModel;
-    CustomProgressDialog mPdialog;
 
     public RailwayFragment() {
         // Required empty public constructor
@@ -64,7 +62,6 @@ public class RailwayFragment extends Fragment {
         ButterKnife.bind(this, view);
         mRailwayViewModel = new ViewModelProvider(this).get(RailwayViewModel.class);
         mRailwayViewModel.init();
-        mPdialog = new CustomProgressDialog(requireContext());
         ArrayAdapter<String> adapter = getArrayAdapterRailway();
         mSpinner.setAdapter(adapter);
         mRailwayTimeList.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -113,13 +110,12 @@ public class RailwayFragment extends Fragment {
                 // Toast.makeText(requireContext(), "Time out", Toast.LENGTH_SHORT).show();
                 mErrorBlock.setVisibility(View.VISIBLE);
             }
-            mPdialog.hide();
+            mSwiper.setRefreshing(false);
         });
 
         mRailwayViewModel.getFailStatus().observe(getViewLifecycleOwner(), failed -> {
             Toast.makeText(requireContext(), "Request Timeout", Toast.LENGTH_SHORT).show();
             mErrorBlock.setVisibility(View.VISIBLE);
-            mPdialog.hide();
             mSwiper.setRefreshing(false);
         });
 
@@ -164,9 +160,7 @@ public class RailwayFragment extends Fragment {
     }
 
     private void getData(String toStationName) throws JSONException {
-        mPdialog.setCancelable(false);
-        mPdialog.setMessage("Loading Data...");
-        mPdialog.show();
+        mSwiper.setRefreshing(true);
         mRailwayViewModel.retrieveRailwaySchedule(toStationName);
     }
 
