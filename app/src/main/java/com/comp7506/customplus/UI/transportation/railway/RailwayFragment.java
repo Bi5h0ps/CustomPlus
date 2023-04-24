@@ -34,6 +34,8 @@ import java.util.TimeZone;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static com.comp7506.customplus.UI.tools.tools.codeToName;
+
 public class RailwayFragment extends Fragment {
 
     @BindView(R.id.spinner_railway)
@@ -174,27 +176,7 @@ public class RailwayFragment extends Fragment {
     }
 
     private void getData(String fromStationName) throws JSONException {
+        mSwiper.setRefreshing(true);
         mRailwayViewModel.retrieveRailwaySchedule(fromStationName);
-    }
-
-    public static String codeToName(String code) {
-        switch (code) {
-            case "XJA":
-                return "West Kowloon";
-            case "NZQ":
-                return "Futian";
-            case "IOQ":
-                return "Shenzhen North";
-            case "DNA":
-                return "Dongguan South";
-            case "RTQ":
-                return "Dongguan";
-            case "GGQ":
-                return "Guangzhou East";
-            case "IZQ":
-                return "Guangzhou South";
-            default:
-                return "Unknown";
-        }
     }
 }

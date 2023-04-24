@@ -1,5 +1,7 @@
 package com.comp7506.customplus.UI.transportation.railway;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.comp7506.customplus.R;
 import com.comp7506.customplus.UI.datamodel.RailwayData;
+import com.comp7506.customplus.UI.tools.tools;
 
 import java.util.List;
 
@@ -39,6 +42,18 @@ public class RailwayAdapter extends RecyclerView.Adapter<RailwayAdapter.ViewHold
         holder.mTrainCode.setText(railwayData.getTrainCode());
         holder.mFromStation.setText(railwayData.getFromStation());
         holder.mToStation.setText(railwayData.getToStation());
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String fromStationBrowser = tools.codeToNameBrowserUrl(railwayData.getFromStation())[0];
+                String fromStationCode = tools.codeToNameBrowserUrl(railwayData.getFromStation())[1];
+                String date = tools.getTodayYYYYMMDD();
+                String uri = String.format("https://www.12306.cn/en/left-ticket.html?fs=%s,%s&ts=Hkwestkowloon,XJA&date=%s&flag=G/C/D",
+                        fromStationBrowser,fromStationCode, date);
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+                view.getContext().startActivity(browserIntent);
+            }
+        });
     }
 
     @Override
